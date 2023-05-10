@@ -1,8 +1,21 @@
 {% extends 'base.html' %}
 
+{% block title %}Home{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <style>
+  .centered-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 20vh; /* Hier können Sie die Höhe des Containers anpassen */
+}
+  </style>
+{% endblock %}
+
 {% block content %}
-  <div class="container mt-4">
+
     <h1>Welcome to Job Portal!</h1>
-  
-  </div>
+
 {% endblock %}
