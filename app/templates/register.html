@@ -3,11 +3,20 @@
 {% block head %}
   {{ super() }}
   <style>
-
-  </style>
+    .centered-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh; /* Hier können Sie die Höhe des Containers anpassen */
+  }
+    </style>
 {% endblock %}
 
 {% block content %}
+<div class="centered-container">
+    <div class="row">
+        <div class="container mt-4">  
+
     <h1>Register</h1>
     <form method="post">
         {{ form.hidden_tag() }}
@@ -63,8 +72,12 @@
                 {{ form.password2(class="form-control") }}
             {% endif %}
         </div>
-        <div class="form-group">
+        <div class="form-group"><br>
             {{ form.submit(class="btn btn-primary") }}
         </div>
     </form>
+
+        </div>
+    </div>
+</div>
 {% endblock %}

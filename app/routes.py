@@ -1,11 +1,12 @@
 from flask import render_template, url_for, flash, redirect, request
-from app import app
+from app import app, db
 
 from app.forms.login import LoginForm
 from app.forms.job import JobForm
+from app.forms.registration import RegistrationForm
 
 from app.models.login import User
-from app.models.registration import RegistrationForm
+
 
 from werkzeug.urls import url_parse
 from flask_login import logout_user
@@ -101,7 +102,7 @@ def create_job():
         db.session.add(job)
         db.session.commit()
         flash('Job created successfully!', 'success')
-        return redirect(url_for('index'))
+        return redirect(url_for('home'))
     return render_template('create_job.html', form=form)
 
 
@@ -115,7 +116,7 @@ def create_job():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('home'))
     form = RegistrationForm()
     if form.validate_on_submit():
         user = User(username=form.username.data, email=form.email.data)
