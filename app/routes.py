@@ -1,25 +1,26 @@
-from flask import render_template, url_for, flash, redirect
+from flask import render_template, url_for, flash, redirect, request
 from app import app
 from app.forms.login import LoginForm
 from app.forms.job import JobForm
+from werkzeug.urls import url_parse
+from app.models.login import User
+from flask_login import logout_user
+from flask_login import login_required
 
+from flask_login import login_user, current_user
+
+#---------------------------------------------------------------------------------
+#------------- Startpage -----------------------------------------
+#---------------------------------------------------------------------------------
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/home', methods=['GET', 'POST'])
+@login_required
 def home():
-    user = {'username': 'Vijay', 'username': 'Adi'}
-    
-    posts = [
-        {
-            'author': {'username': 'Vijay'},
-            'body': 'Die Anmeldung scheint zu klappen!'
-        }
-    ]
-  
 
+    return render_template('home.html', titel='Home')
 
-    return render_template('home.html', titel='Home', user=user, posts=posts,)
-
+#---------------------------------------------------------------------------------
 
 
 #---------------------------------------------------------------------------------
@@ -47,18 +48,32 @@ def internal_server_error(error):
 # Login URL
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    # create a LoginForm instance
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     form = LoginForm()
-
-    # handle form submission
     if form.validate_on_submit():
-        # submitted form data
-        flash('Login requested for user {}, remember_me={}'.format(
-            form.username.data, form.remember.data))
-        return redirect('/home')
+        # Check if the user exists and the password is correct
+        user = User.query.filter_by(username=form.username.data).first()
+        if not user or not user.check_password(form.password.data):
+            flash('Invalid username or password')
+            return redirect(url_for('login'))
+        # Log the user in and redirect to the homepage
+        login_user(user, remember=form.remember_me.data)
+        return redirect(url_for('home'))
+    # Display the login form
+    return render_template('login.html', title='Sign In', form=form)
 
-    # render the login form
-    return render_template('login.html', title='Login', form=form)
+
+#---------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------
+#------------- Logout --------------------------------------------------------
+#---------------------------------------------------------------------------------
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
 
 #---------------------------------------------------------------------------------
 
