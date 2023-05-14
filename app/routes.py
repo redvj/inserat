@@ -19,12 +19,22 @@ from flask_login import login_user, current_user
 #------------- Startpage -----------------------------------------
 #---------------------------------------------------------------------------------
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 @app.route('/home', methods=['GET', 'POST'])
 @login_required
 def home():
+    posts = [
+        {
+            'author': {'username': 'Vijay'},
+            'body': 'Beautiful day in Portland!'
+        },
+        {
+            'author': {'username': 'Susan'},
+            'body': 'The Avengers movie was so cool!'
+        }
+    ]
 
-    return render_template('home.html', titel='Home')
+    return render_template('home.html', titel='Home', posts=posts)
 
 #---------------------------------------------------------------------------------
 
@@ -60,14 +70,38 @@ def login():
     if form.validate_on_submit():
         # Check if the user exists and the password is correct
         user = User.query.filter_by(username=form.username.data).first()
-        if not user or not user.check_password(form.password.data):
+        if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
             return redirect(url_for('login'))
         # Log the user in and redirect to the homepage
-        login_user(user, remember=form.remember_me.data)
-        return redirect(url_for('home'))
+        login_user(user, remember=form.remember.data)
+        next_page = request.args.get('next')
+        if not next_page or url_parse(next_page).netloc != '':
+            next_page = url_for('home')
+        return redirect(next_page)
     # Display the login form
     return render_template('login.html', title='Sign In', form=form)
+
+
+#---------------------------------------------------------------------------------
+
+
+#---------------------------------------------------------------------------------
+#------------- Profile page --------------------------------------------------------
+#---------------------------------------------------------------------------------
+
+@app.route('/user/<username>')
+@login_required
+def user(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    posts = [
+        {'author': user, 'body': 'Test post #1'},
+        {'author': user, 'body': 'Test post #2'}
+
+    ]
+
+
+    return render_template('user.html', user=user, posts=posts)
 
 
 #---------------------------------------------------------------------------------
