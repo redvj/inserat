@@ -2,7 +2,6 @@ from flask import render_template, url_for, flash, redirect, request
 from app import app, db
 
 from app.forms.login import LoginForm
-from app.forms.job import JobForm
 from app.forms.registration import RegistrationForm
 
 from app.models.login import User
@@ -11,8 +10,8 @@ from app.models.login import User
 from werkzeug.urls import url_parse
 from flask_login import logout_user
 from flask_login import login_required
-
 from flask_login import login_user, current_user
+
 
 
 #---------------------------------------------------------------------------------
@@ -119,25 +118,10 @@ def logout():
 
 
 #---------------------------------------------------------------------------------
-#------------- Create_Job --------------------------------------------------------
+#------------- ******* --------------------------------------------------------
 #---------------------------------------------------------------------------------
 
-@app.route('/create_job', methods=['GET', 'POST'])
-def create_job():
-    form = JobForm()
-    if form.validate_on_submit():
-        job = Job(
-            title=form.title.data,
-            company=form.company.data,
-            description=form.description.data,
-            requirements=form.requirements.data,
-            location=form.location.data
-        )
-        db.session.add(job)
-        db.session.commit()
-        flash('Job created successfully!', 'success')
-        return redirect(url_for('home'))
-    return render_template('create_job.html', form=form)
+
 
 
 #---------------------------------------------------------------------------------
