@@ -3,74 +3,61 @@
 {% block head %}
   {{ super() }}
   <style>
-  .centered-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 50vh; /* Hier können Sie die Höhe des Containers anpassen */
-}
+
+    .custom-container {
+      margin-top: 50px; /* Adjust the value as needed */
+      
+    }
+
   </style>
 {% endblock %}
 
 
 {% block content %}
 
-
-<div class="centered-container">
-  <div class="row">
-    <div class="container mt-4 p-4 bg-light border rounded shadow">
-
-      <h1>Login</h1>
-      <form method="post">
-        {{ form.hidden_tag() }}
-        <div class="form-group">
-          {{ form.username.label(class="form-control-label") }}
-          {% if form.username.errors %}
-            {{ form.username(class="form-control is-invalid") }}
-            <div class="invalid-feedback">
-              {% for error in form.username.errors %}
-              <span>{{ error }}</span>
-              {% endfor %}
+<div class="container d-flex align-items-center justify-content-center custom-container">
+  <div class="card shadow-lg  mb-3">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img src="{{ url_for('static', filename='img/nature.jpg') }}" class="img-fluid rounded-start" alt="...">
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h1>Sign In</h1>
+          <form action="" method="post" novalidate>
+              {{ form.hidden_tag() }}
+              <div class="form-group">
+                <label for="{{ form.username.id }}" class="col-form-label">{{ form.username.label }}</label>
+                <input type="text" class="form-control" id="{{ form.username.id }}" name="{{ form.username.name }}" value="{{ form.username._value() }}" size="32">
+                {% for error in form.username.errors %}
+                <span class="text-danger">{{ error }}</span>
+                {% endfor %}
             </div>
-          {% else %}
-            {{ form.username(class="form-control") }}
-          {% endif %}
-        </div>
-        <div class="form-group">
-          {{ form.password.label(class="form-control-label") }}
-          {% if form.password.errors %}
-            {{ form.password(class="form-control is-invalid") }}
-            <div class="invalid-feedback">
+            
+            <div class="form-group">
+              <label for="{{ form.password.id }}" class="col-form-label">{{ form.password.label }}</label>
+              <input type="password" class="form-control" id="{{ form.password.id }}" name="{{ form.password.name }}" size="32">
               {% for error in form.password.errors %}
-              <span>{{ error }}</span>
+              <span class="text-danger">{{ error }}</span>
               {% endfor %}
-            </div>
-          {% else %}
-            {{ form.password(class="form-control") }}
-          {% endif %}
+          </div>
+          <p></p>
+          <div class="form-check">
+            {{ form.remember(class="form-check-input") }}
+            <label class="form-check-label" for="{{ form.remember.id }}">{{ form.remember.label }}</label>
+          </div>
+          <div class="form-group">
+            {{ form.submit(class="btn btn-primary") }}
+          </div>
+          </form>
+          <p></p>
+        
+          <p>New User? <a href="{{ url_for('register') }}">Click to Register!</a></p>
         </div>
-        <div class="form-check"><br>
-          {{ form.remember(class="form-check-input") }}
-          {{ form.remember.label(class="form-check-label") }}
-        </div>
-        <div class="form-group"><br>
-          {{ form.submit(class="btn btn-primary") }}
-        </div>
-        <hr>
-        <p><a>Hast du noch kein ___ Konto?</a></p>
-        <p><a href="{{ url_for('register') }}">Jetzt registrieren.</a></p>
-      </form>
-
+      </div>
     </div>
   </div>
 </div>
-
-
-
-
-
-
-
 
 
 {% endblock %}

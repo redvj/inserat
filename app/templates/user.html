@@ -3,33 +3,73 @@
 {% block head %}
   {{ super() }}
   <style>
-    .centered-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50vh; /* Hier können Sie die Höhe des Containers anpassen */
-  }
-    </style>
+    .custom-container {
+      margin-top: 50px; /* Adjust the value as needed */
+      
+    }
+
+    
+
+  </style>
 {% endblock %}
 
 {% block content %}
 
-<table>
-    <tr valign="top">
-        <td><img src="#"></td>
-        <td>
-            <h1>User: {{ user.username }}</h1>
-            {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
-            {% if user.last_seen %}<p>Last seen on: {{ user.last_seen }}</p>{% endif %}
-            {% if user == current_user %}
-            <p><a href="#">Edit your profile</a></p>
-            {% endif %}
-        </td>
-    </tr>
-</table>
-<hr>
-{% for post in posts %}
 
+<div class="container custom-container ">
+
+  <h1>Dasboard</h1><br/>
+ 
+
+  <div class="card shadow-lg">
+    <h5 class="card-header">Welcome To Your User Dashboard...</h5>
+    <div class="card-body">
+      <div class="card-title">
+        <div class="row  g-0">
+          <div class="col-sm-2 ">
+            <img src="{{ user.avatar(128) }}">
+
+          </div>
+          <div class="col-sm-5">
+                <strong>User:</strong>
+                {{ user.username }}<br/>
+                {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
+                {% if user.last_seen %}<p>Last seen on: {{ user.last_seen }}</p>{% endif %}
+                {% if user == current_user %}
+                {% endif %}
+               
+                <strong>User Id:</strong>
+                {{ user.id }}<br/>
+                <strong>Email:</strong>
+                {{ user.email }}<br/>
+                <strong>Date of Joined:</strong>
+                {{ user.user_adedd}}<br/>
+       
+            
+                <br/><br/>
+                <a href="#" class="btn btn-primary">Edit your profile</a>
+              </div>
+        </div>
+      </div>
+      
+      
+
+
+    </div>
+  </div>
+
+
+
+
+</div>
+<br>
+<div class="container">
+<!-- Content of your container goes here -->
+{% for post in posts %}
+    {% include 'includes/_post.html' %}
 {% endfor %}
+</div>
+
+
 
 {% endblock %}

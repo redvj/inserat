@@ -8,37 +8,67 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
     
-    <!-- Bootswatch theme -->
-    <link rel="stylesheet" href="https://bootswatch.com/5/yeti/bootstrap.min.css">
+    <!-- Bootswatch theme
+    <link rel="stylesheet" href="https://bootswatch.com/5/yeti/bootstrap.min.css">  -->
+
+    <!-- Fontawesomee -->
+    <script src="https://kit.fontawesome.com/8744ee2cf9.js" crossorigin="anonymous"></script>
+
+    <!-- Custem CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
     
      <!-- Titel -->
     {% if title %}
-        <title>{{ title }} - Jobportal</title>
+        <title>{{ title }} - Inserat+</title>
         {% else %}
-        <title>Welcome to Jobportal</title>
+        <title>Welcome to Inserat+</title>
     {% endif %}
     
-     <!-- Head for Style -->
+    <!-- Head for Style -->
     {% block head %} {% endblock %}
 
+
+    
 </head>
 <body>
 
-    <!-- Navbar -->
+    <!-- Navigation - Navbar -->
         {% include "includes/nav.html" %}
     <!-- End Navbar -->
 
-    <div class="centered-container">
-        <div class="row">
-            <div class="container mt-4">   
-                {% block content %}{% endblock %}
-            </div>
-        </div>
-    </div>
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <div class="row" style= "margin-top: 50px;">
+        <div class="col"></div>
+        <div class="col">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <ul>
+            {% for message in messages %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+
+        </div>
+        <div class="col"></div>
+      </div>
+
+        
+
+
+
+    {% block content %}{% endblock %}
+        
+ 
+
+    <!-- Bootstrap JavaScript -->
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+
 </body>
 </html>
 

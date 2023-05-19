@@ -1,21 +1,25 @@
-from flask import render_template, url_for, flash, redirect, request
+from flask import render_template, url_for, flash, redirect, request, flash
 from app import app, db
-
-from app.forms.login import LoginForm
-from app.forms.registration import RegistrationForm
-
-from app.models.login import User
-
 
 from werkzeug.urls import url_parse
 from flask_login import logout_user
 from flask_login import login_required
 from flask_login import login_user, current_user
 
+#------------- Forms ----------------------------------------------------------
+from app.forms.login import LoginForm
+from app.forms.registration import RegistrationForm
+
+#------------- Models ---------------------------------------------------------
+from app.models.login import User
+
+
+
+
 
 
 #---------------------------------------------------------------------------------
-#------------- Startpage -----------------------------------------
+#------------- Startpage ---------------------------------------------------------
 #---------------------------------------------------------------------------------
 
 @app.route('/')
@@ -66,9 +70,11 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
     form = LoginForm()
+    # Validate Form
     if form.validate_on_submit():
         # Check if the user exists and the password is correct
         user = User.query.filter_by(username=form.username.data).first()
+
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
             return redirect(url_for('login'))
@@ -137,12 +143,14 @@ def register():
         return redirect(url_for('home'))
     form = RegistrationForm()
     if form.validate_on_submit():
+        # Route /register wurde mit POST betreten. Prüfung, ob alles o.k. ist:
         user = User(username=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
+    # Route /register wurde mit GET betreten
     return render_template('register.html', title='Register', form=form)
 
 
