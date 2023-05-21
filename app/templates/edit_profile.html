@@ -10,6 +10,28 @@
 {% endblock %}
 
 {% block content %}
+
+<!-- Error Messages -->
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6 ">
+      <form>
+      {% if form.errors %}
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        {% for field, errors in form.errors.items() %}
+          {% for error in errors %}
+            <p>{{ form[field].label }} - {{ error }}</p>
+          {% endfor %}
+        {% endfor %}
+      </div>
+      {% endif %}
+      </form>
+    </div>
+  </div>
+</div>
+
+
 <div class="container custom-container">
   <div class="row justify-content-center">
     <div class="col-md-6 border rounded shadow-lg">

@@ -187,7 +187,7 @@ def edit_profile():
         current_user.set_password(form.password.data)
         db.session.commit()
         flash('Your profile has been updated!', 'success')
-        return redirect(url_for('edit_profile'))
+        return redirect(url_for('user', username=current_user.username))
     elif request.method == 'GET':
         form.first_name.data = current_user.first_name
         form.last_name.data = current_user.last_name
