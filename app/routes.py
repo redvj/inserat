@@ -1,6 +1,6 @@
 from flask import render_template, url_for, flash, redirect, request, flash
 from app import app, db
-
+from datetime import datetime
 from werkzeug.urls import url_parse
 from flask_login import logout_user
 from flask_login import login_required
@@ -110,6 +110,11 @@ def user(username):
 
 
 #---------------------------------------------------------------------------------
+@app.before_request
+def before_request():
+    if current_user.is_authenticated:
+        current_user.last_seen = datetime.utcnow()
+        db.session.commit()
 
 #---------------------------------------------------------------------------------
 #------------- Logout --------------------------------------------------------
