@@ -4,7 +4,7 @@ from datetime import datetime
 from werkzeug.urls import url_parse
 from flask_login import logout_user
 from flask_login import login_required
-from flask_login import login_user, current_user
+from flask_login import login_user, current_user, logout_user
 
 #------------- Forms ----------------------------------------------------------
 from app.forms.login import LoginForm
@@ -197,3 +197,18 @@ def edit_profile():
 
 
 #---------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------
+#------------- Edit Profil -------------------------------------------------------
+#---------------------------------------------------------------------------------
+
+@app.route('/delete_profile', methods=['POST'])
+def delete_profile():
+    # Get the current user
+    user = current_user
+    # Delete the user and commit the changes
+    db.session.delete(user)
+    db.session.commit()
+
+    # Redirect the user to a relevant page (e.g., home page or login page)
+    return redirect(url_for('home'))
