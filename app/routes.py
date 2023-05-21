@@ -9,6 +9,8 @@ from flask_login import login_user, current_user
 #------------- Forms ----------------------------------------------------------
 from app.forms.login import LoginForm
 from app.forms.registration import RegistrationForm
+from app.forms.profileedit import ProfileEditForm
+
 
 #------------- Models ---------------------------------------------------------
 from app.models.login import User
@@ -110,6 +112,10 @@ def user(username):
 
 
 #---------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------
+#------------- Last_seen ---------------------------------------------------------
+#---------------------------------------------------------------------------------
 @app.before_request
 def before_request():
     if current_user.is_authenticated:
@@ -117,7 +123,9 @@ def before_request():
         db.session.commit()
 
 #---------------------------------------------------------------------------------
-#------------- Logout --------------------------------------------------------
+
+#---------------------------------------------------------------------------------
+#------------- Logout ------------------------------------------------------------
 #---------------------------------------------------------------------------------
 
 @app.route('/logout')
@@ -129,7 +137,7 @@ def logout():
 
 
 #---------------------------------------------------------------------------------
-#------------- ******* --------------------------------------------------------
+#------------- Template --------------------------------------------------------...
 #---------------------------------------------------------------------------------
 
 
@@ -138,7 +146,7 @@ def logout():
 #---------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------
-#------------- Registration Form --------------------------------------------------------
+#------------- Registration Form -------------------------------------------------
 #---------------------------------------------------------------------------------
 
 
@@ -159,6 +167,33 @@ def register():
     # Route /register wurde mit GET betreten
     return render_template('register.html', title='Register', form=form)
 
+
+
+#---------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------
+#------------- Edit Profil -------------------------------------------------------
+#---------------------------------------------------------------------------------
+
+@app.route('/edit_profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    form = ProfileEditForm()
+    if form.validate_on_submit():
+        current_user.first_name = form.first_name.data
+        current_user.last_name = form.last_name.data
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        current_user.set_password(form.password.data)
+        db.session.commit()
+        flash('Your profile has been updated!', 'success')
+        return redirect(url_for('edit_profile'))
+    elif request.method == 'GET':
+        form.first_name.data = current_user.first_name
+        form.last_name.data = current_user.last_name
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+    return render_template('edit_profile.html', title='Edit Profile', form=form)
 
 
 #---------------------------------------------------------------------------------
