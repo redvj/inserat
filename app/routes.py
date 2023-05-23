@@ -212,3 +212,5 @@ def delete_profile():
 
     # Redirect the user to a relevant page (e.g., home page or login page)
     return redirect(url_for('home'))
+
+
