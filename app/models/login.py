@@ -3,6 +3,7 @@ from app import db, login
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
 # Method for Avatare
 from hashlib import md5
 
@@ -16,6 +17,7 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(128), nullable=False)
     user_adedd = db.Column(db.DateTime, default=datetime.utcnow)
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+    is_admin = db.Column(db.Boolean, default=False)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -31,7 +33,7 @@ class User(db.Model, UserMixin):
         return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(
             digest, size
             )
-        
+
     
 
 @login.user_loader

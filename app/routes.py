@@ -52,7 +52,13 @@ def home():
 @app.errorhandler(404)
 def page_not_found(e):
     # Render the template with the 404 error status code
-    return render_template('404.html'), 404
+    return render_template('404.html'), 404 
+
+# # Return a forbidden error if the user is not an admin
+@app.errorhandler(403)
+def page_not_found(e):
+    # Render the template with the 404 error status code
+    return render_template('404.html'), 403
 
 # Custom 500 error page
 @app.errorhandler(500)
@@ -199,7 +205,7 @@ def edit_profile():
 #---------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------
-#------------- Edit Profil -------------------------------------------------------
+#------------- Delete_profile ----------------------------------------------------
 #---------------------------------------------------------------------------------
 
 @app.route('/delete_profile', methods=['POST'])
@@ -213,4 +219,22 @@ def delete_profile():
     # Redirect the user to a relevant page (e.g., home page or login page)
     return redirect(url_for('home'))
 
+#---------------------------------------------------------------------------------
 
+
+#---------------------------------------------------------------------------------
+#------------- Admin Panel ----------------------------------------------------
+#---------------------------------------------------------------------------------
+
+from flask import abort
+@app.route('/admin')
+def admin_page():
+    if not current_user.is_authenticated or not current_user.is_admin:
+        abort(403)  # Return a forbidden error if the user is not an admin
+      
+    else:
+        # Render the admin page for admin users
+    
+       return render_template('admin/index.html')
+    
+#---------------------------------------------------------------------------------
