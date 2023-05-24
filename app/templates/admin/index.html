@@ -3,28 +3,19 @@
 
 {% block body %}
     {{ super() }}
-    <div class="container">
+
+    <div class="container pt-5">
         <div class="row">
-            <div class="col-sm-10 offset-sm-1">
+            <div class="col">
                 <div class="jumbotron">
-                    <h1 class="display-4">Flask-Admin Example</h1>
-                    <p class="lead">Authentication</p>
-                    <p>
-                        This example demonstrates the usage of
-                        <a href="https://pythonhosted.org/Flask-Security/index.html" target="_blank">Flask-Security</a>
-                        for authentication.
-                    </p>
-                    {% if not current_user.is_authenticated %}
-                        <div class="alert alert-info" role="alert">
-                            You can register as a regular user or log in as a superuser with the following credentials:
-                            <ul>
-                                <li><strong>Email:</strong> admin@example.com</li>
-                                <li><strong>Password:</strong> admin</li>
-                            </ul>
-                        </div>
-                    {% endif %}
-                    <p>
+                    <h1 class="display-4 text-center">Welcome to the Admin Panel</h1>
+                    <p class="lead text-center">{{ current_user.first_name }}
+                    <br></br>
+                    <br></br>
+                    <br></br>
                         <a class="btn btn-primary" href="/"> Back</a>
+                        <a class="btn btn-light" href="/admin/user">User</a>
+                        <a class="btn btn-dark" href="/logout"> Log out</a>
                     </p>
                 </div>
             </div>

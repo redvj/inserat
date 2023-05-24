@@ -1,11 +1,15 @@
-from flask import render_template, url_for, flash, redirect, request, flash
+#---------------------------------------------------------------------------------
+#------------- Imports -----------------------------------------------------------
+#---------------------------------------------------------------------------------
+
+from flask import flash, redirect, render_template, render_template,  request, url_for
 from app import app, db
 from datetime import datetime
 from werkzeug.urls import url_parse
 from flask_login import logout_user
 from flask_login import login_required
 from flask_login import login_user, current_user, logout_user
-
+from urllib.parse import urlparse
 #------------- Forms ----------------------------------------------------------
 from app.forms.login import LoginForm
 from app.forms.registration import RegistrationForm
@@ -73,27 +77,35 @@ def internal_server_error(error):
 #---------------------------------------------------------------------------------
 
 # Login URL
+from flask import flash, redirect, render_template, request, url_for
+from flask_login import current_user, login_user
+from urllib.parse import urlparse
+# Import the necessary modules and classes
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
     form = LoginForm()
-    # Validate Form
     if form.validate_on_submit():
-        # Check if the user exists and the password is correct
         user = User.query.filter_by(username=form.username.data).first()
-
-        if user is None or not user.check_password(form.password.data):
+        # If the user blocked - Admin Panel
+        if user and user.is_blocked:
+            flash('You have been locked by the administrator')
+            return redirect(url_for('login'))
+        if user and user.check_password(form.password.data):
+            login_user(user, remember=form.remember.data)
+            # If the user is admin - Admin Panel
+            if user.is_admin:
+                return redirect(url_for('user', username=current_user.username))
+            next_page = request.args.get('next')
+            if not next_page or urlparse(next_page).netloc != '':
+                next_page = url_for('home')
+            return redirect(next_page)
+        else:
             flash('Invalid username or password')
             return redirect(url_for('login'))
-        # Log the user in and redirect to the homepage
-        login_user(user, remember=form.remember.data)
-        next_page = request.args.get('next')
-        if not next_page or url_parse(next_page).netloc != '':
-            next_page = url_for('home')
-        return redirect(next_page)
-    # Display the login form
     return render_template('login.html', title='Sign In', form=form)
+
 
 
 #---------------------------------------------------------------------------------
@@ -106,6 +118,7 @@ def login():
 @app.route('/user/<username>')
 @login_required
 def user(username):
+
     user = User.query.filter_by(username=username).first_or_404()
     posts = [
         {'author': user, 'body': 'Test post #1'},
@@ -113,7 +126,8 @@ def user(username):
 
     ]
 
-
+   
+  
     return render_template('user.html', user=user, posts=posts)
 
 
@@ -212,23 +226,29 @@ def edit_profile():
 def delete_profile():
     # Get the current user
     user = current_user
-    # Delete the user and commit the changes
-    db.session.delete(user)
-    db.session.commit()
 
-    # Redirect the user to a relevant page (e.g., home page or login page)
+    if user.is_admin:
+        flash('Admin account can not be be deleted')
+        return redirect(url_for('user', username=current_user.username))
+    else:
+        
+        # Delete the user and commit the changes
+        db.session.delete(user)
+        db.session.commit()
+        flash('Your account has been successfully deleted')
+        # Redirect the user to a relevant page (e.g., home page or login page)
     return redirect(url_for('home'))
 
 #---------------------------------------------------------------------------------
 
 
 #---------------------------------------------------------------------------------
-#------------- Admin Panel ----------------------------------------------------
+#------------- Admin Panel -------------------------------------------------------
 #---------------------------------------------------------------------------------
 
 from flask import abort
 @app.route('/admin')
-def admin_page():
+def admin_Panel():
     if not current_user.is_authenticated or not current_user.is_admin:
         abort(403)  # Return a forbidden error if the user is not an admin
       

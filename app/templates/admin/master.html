@@ -1,2 +1,63 @@
 {% extends 'admin/base.html' %}
 
+
+{% block head_css %}
+    {{ super() }}
+    <!-- Fontawesomee -->
+    <script src="https://kit.fontawesome.com/8744ee2cf9.js" crossorigin="anonymous"></script>
+{% endblock %}
+
+{{ super() }}
+
+<FontAwesomeIcon icon="far fa-tools" />
+
+{% block page_body %}
+   
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <i class="fas fa-tools"" style="color: #7bea5d;"></i>
+      <a class="navbar-brand" href="/admin">&nbsp Admin Panel+</a>
+      
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/admin">Home</a>
+          </li>
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/user">User</a>
+          </li>
+       
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('user', username=current_user.username) }}">Dasboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+          </li>
+       
+        </ul>
+        
+      </div>
+    </div>
+  </nav>
+  
+  <br></br>
+
+  <div class="container{%if config.get('FLASK_ADMIN_FLUID_LAYOUT', False) %}-fluid{% endif %}">
+
+    <!-- Nav section removed -->
+    
+
+    {% block messages %}
+    {{ layout.messages() }}
+    {% endblock %}
+
+    {# store the jinja2 context for form_rules rendering logic #}
+    {% set render_ctx = h.resolve_ctx() %}
+
+    {% block body %}{% endblock %}
+  </div>
+{% endblock %}

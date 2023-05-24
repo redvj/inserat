@@ -18,6 +18,7 @@ class User(db.Model, UserMixin):
     user_adedd = db.Column(db.DateTime, default=datetime.utcnow)
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     is_admin = db.Column(db.Boolean, default=False)
+    is_blocked = db.Column(db.Boolean, default=False)  # registered users can be blocked from logging in
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -39,3 +40,4 @@ class User(db.Model, UserMixin):
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
+

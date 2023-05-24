@@ -19,8 +19,8 @@ from flask_admin import helpers as admin_helpers
 
 
 class UserView(ModelView):
-    column_list = ['id', 'first_name', 'last_name', 'username', 'email','user_adedd', 'last_seen', 'is_admin']
-    form_columns = ['first_name', 'last_name', 'username', 'email', 'password_hash', 'is_admin']
+    column_list = ['id', 'first_name', 'last_name', 'username', 'email','user_adedd', 'last_seen', 'is_admin', 'is_blocked']
+    form_columns = ['first_name', 'last_name', 'username', 'email', 'password_hash', 'is_admin',  'is_blocked']
     column_searchable_list = ['username', 'email', 'last_name']
     
     # Flask Admin is displayed as a password field to ensure that the user's 
