@@ -16,11 +16,15 @@ from app.forms.registration import RegistrationForm
 from app.forms.profileedit import ProfileEditForm
 
 
+from app.forms.resetpasswordfrom import ResetPasswordForm, ResetPasswordRequestForm
+
+
+
 #------------- Models ---------------------------------------------------------
 from app.models.login import User
 
 
-
+from app.email import send_password_reset_email
 
 
 
@@ -58,11 +62,6 @@ def page_not_found(e):
     # Render the template with the 404 error status code
     return render_template('404.html'), 404 
 
-# # Return a forbidden error if the user is not an admin
-@app.errorhandler(403)
-def page_not_found(e):
-    # Render the template with the 404 error status code
-    return render_template('404.html'), 403
 
 # Custom 500 error page
 @app.errorhandler(500)
@@ -136,11 +135,14 @@ def user(username):
 #---------------------------------------------------------------------------------
 #------------- Last_seen ---------------------------------------------------------
 #---------------------------------------------------------------------------------
+
 @app.before_request
 def before_request():
     if current_user.is_authenticated:
-        current_user.last_seen = datetime.utcnow()
+        formatted_time = datetime.utcnow().strftime("%d-%b-%Y %H:%M:%S")
+        current_user.last_seen = datetime.strptime(formatted_time, "%d-%b-%Y %H:%M:%S")
         db.session.commit()
+
 
 #---------------------------------------------------------------------------------
 
@@ -258,3 +260,39 @@ def admin_Panel():
        return render_template('admin/index.html')
     
 #---------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------
+#------------- Password-recovery/reset -------------------------------------------
+#---------------------------------------------------------------------------------
+
+@app.route('/reset_password_request', methods=['GET', 'POST'])
+def reset_password_request():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    form = ResetPasswordRequestForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            send_password_reset_email(user)
+        flash('Check your email for the instructions to reset your password')
+        return redirect(url_for('login'))
+    return render_template('reset_password_request.html',
+                           title='Reset Password', form=form)
+
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    form = ResetPasswordForm()
+    # Rest of your code
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    user = User.verify_reset_password_token(token)
+    if not user:
+        return redirect(url_for('home'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        user.set_password(form.password.data)
+        db.session.commit()
+        flash('Your password has been reset.')
+        return redirect(url_for('login'))
+    return render_template('reset_password.html', form=form)

@@ -7,15 +7,21 @@
     <div class="container pt-5">
         <div class="row">
             <div class="col">
-                <div class="jumbotron">
+                <div class="jumbotron rounded shadow-lg">
                     <h1 class="display-4 text-center">Welcome to the Admin Panel</h1>
-                    <p class="lead text-center">{{ current_user.first_name }}
+                    <p class="lead text-center">{{ current_user.first_name }} {{ current_user.last_name }} 
                     <br></br>
                     <br></br>
-                    <br></br>
-                        <a class="btn btn-primary" href="/"> Back</a>
-                        <a class="btn btn-light" href="/admin/user">User</a>
-                        <a class="btn btn-dark" href="/logout"> Log out</a>
+                    <div class="container text-center">
+                        <div class="btn-group" role="group" aria-label="Basic outlined example">
+                            <a href="/" class="btn btn-outline-primary" role="button">Back </a>
+                            <a href="/admin/user" class="btn btn-outline-primary" role="button">User</a>
+                            <a href="{{ url_for('user', username=current_user.username) }}" class="btn btn-outline-primary" role="button">Dasboard</a>
+                            <a href="/logout" class="btn btn-outline-primary" role="button">Log out</a>
+                           
+                        </div>
+                    </div>
+
                     </p>
                 </div>
             </div>
