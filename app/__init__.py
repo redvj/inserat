@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_admin import Admin
 from flask_login import LoginManager
+from flask_moment import Moment
 
 # For Admin Panel
 from flask_admin.contrib.sqla import ModelView
@@ -21,10 +22,12 @@ Migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view = 'login'
 mail = Mail(app)
+moment = Moment(app)
 
 if __name__ == '__main__':
     app.run(debug=True)
 
 
 from app import routes
-from app.models import login, controlpanel
+from app.models import login, controlpanel, advertisement
+from app.models.advertisement import Advertisement

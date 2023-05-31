@@ -41,6 +41,7 @@
 
         <form method="POST" action="{{ url_for('register') }}">
           {{ form.csrf_token }}
+          {{ form.hidden_tag() }}
 
           <div class="form-group">
             {{ form.first_name.label }}

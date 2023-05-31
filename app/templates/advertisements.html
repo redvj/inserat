@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  {{ super() }}
+  {{ moment.include_moment() }}
+  
+  <style>
+    .custom-container {
+      margin-top: 50px; /* Adjust the value as needed */
+      
+    }
+    .card {
+    margin-bottom: 20px; /* Adjust the value as per your preference */
+    }
+
+    .card-body {
+    padding: 20px; /* Adjust the value as per your preference */
+    }
+
+  </style>
+{% endblock %}
+
+
+{% block content %}
+
+<!-- Error Messages -->
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6 ">
+      <form>
+      {% if form.errors %}
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        {% for field, errors in form.errors.items() %}
+          {% for error in errors %}
+            <p>{{ form[field].label }} - {{ error }}</p>
+          {% endfor %}
+        {% endfor %}
+      </div>
+      {% endif %}
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Display  advertisements as card decks with  image  -->
+<div class="container custom-container">
+  <div class="card-deck  ">
+    {% for advertisement in advertisements %}
+    
+    <div class="card rounded shadow-lg">
+      <div class="card-header bg-transparent">
+        <div class="row">
+          <div class="col"><h5 class="card-title">{{ advertisement.title }}</h5></div>
+          <div class="col"></div>
+          <div class="col"> {{ moment(advertisement.timestamp).calendar() }}</div>
+          <div class="col"></div>
+        </div>
+      </div>
+      
+      <div class="card-body  bg-light">
+        <p class="card-text">{{ advertisement.description }}</p>
+        <img src="" class="card-img-top" alt="Advertisement Image">
+      </div>
+      
+      <div class="card-footer bg-transparent text-body-secondary">
+
+        <div class="row">
+          <div class="col">
+
+            <ul class="list-group list-group">
+              <li class="list-group-item bg-transparent">Category: {{ advertisement.category.name }}</li>
+              <li class="list-group-item bg-transparent">Subcategory: {{ advertisement.subcategory.name }}</li>
+              <li class="list-group-item bg-transparent">User: {{ advertisement.user.username }}</li>
+            </ul>
+
+
+          </div>
+          <div class="col"></div>
+          <div class="col"></div>
+          
+        </div>
+
+
+
+      </div>
+    </div>
+    
+  {% endfor %}
+</div>
+
+{% endblock %}

@@ -10,19 +10,25 @@ from flask_login import logout_user
 from flask_login import login_required
 from flask_login import login_user, current_user, logout_user
 from urllib.parse import urlparse
+
+from flask_wtf import FlaskForm
+from wtforms import StringField, TextAreaField, SelectField
+from wtforms.validators import DataRequired
+from flask_sqlalchemy import SQLAlchemy
+
 #------------- Forms ----------------------------------------------------------
 from app.forms.login import LoginForm
 from app.forms.registration import RegistrationForm
 from app.forms.profileedit import ProfileEditForm
-
+from app.forms.advertisement import AdvertisementForm
 
 from app.forms.resetpasswordfrom import ResetPasswordForm, ResetPasswordRequestForm
 
 
-
 #------------- Models ---------------------------------------------------------
 from app.models.login import User
-
+from app.models.advertisement import Advertisement
+from app.models.advertisement import Category
 
 from app.email import send_password_reset_email
 
@@ -32,25 +38,41 @@ from app.email import send_password_reset_email
 #------------- Startpage ---------------------------------------------------------
 #---------------------------------------------------------------------------------
 
-@app.route('/')
-@app.route('/home', methods=['GET', 'POST'])
-@login_required
-def home():
-    posts = [
-        {
-            'author': {'username': 'Vijay'},
-            'body': 'Beautiful day in Portland!'
-        },
-        {
-            'author': {'username': 'Susan'},
-            'body': 'The Avengers movie was so cool!'
-        }
-    ]
 
-    return render_template('home.html', titel='Home', posts=posts)
 
 #---------------------------------------------------------------------------------
 
+#---------------------------------------------------------------------------------
+#------------- Advertisement - Create -------------------------------------------
+#---------------------------------------------------------------------------------
+
+@app.route('/', methods=['GET', 'POST'] )
+@app.route('/home', methods=['GET', 'POST'])
+@login_required
+def home():
+    form = AdvertisementForm()
+    if form.validate_on_submit():
+        advertisement = Advertisement(
+            title=form.title.data,
+            description=form.description.data,
+            category_id=form.category_id.data,
+            subcategory_id=form.subcategory_id.data,
+            user_id=form.user_id.data
+        )
+        db.session.add(advertisement)
+        db.session.commit()
+        flash( 'Your ad is now live!')
+        return redirect(url_for('home'))
+    return render_template('home.html', titel='Home Page', form=form)
+
+#---------------------------------------------------------------------------------
+
+@app.route('/advertisements', methods=['GET'])
+@login_required
+def advertisements():
+    all_advertisements = Advertisement.query.all()
+    form = AdvertisementForm()
+    return render_template('advertisements.html', title='Advertisements', advertisements=all_advertisements, form=form)
 
 #---------------------------------------------------------------------------------
 #------------- Create Custem Error pages -----------------------------------------
@@ -296,3 +318,6 @@ def reset_password(token):
         flash('Your password has been reset.')
         return redirect(url_for('login'))
     return render_template('reset_password.html', form=form)
+
+#---------------------------------------------------------------------------------
+

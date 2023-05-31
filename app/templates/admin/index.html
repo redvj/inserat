@@ -14,13 +14,32 @@
                     <br></br>
                     <div class="container text-center">
                         <div class="btn-group" role="group" aria-label="Basic outlined example">
-                            <a href="/" class="btn btn-outline-primary" role="button">Back </a>
+                            <a href="/" class="btn btn-outline-primary" role="button">Home </a>
+                            <a href="/admin" class="btn btn-outline-primary" role="button">Admin Panel </a>
+                            <a href="/logout" class="btn btn-outline-dark" role="button">Log out</a>
+                        </div>
+                    </div>
+                </br>
+                    <div class="container text-center">
+                        <div class="btn-group" role="group" aria-label="Basic outlined example">
                             <a href="/admin/user" class="btn btn-outline-primary" role="button">User</a>
-                            <a href="{{ url_for('user', username=current_user.username) }}" class="btn btn-outline-primary" role="button">Dasboard</a>
-                            <a href="/logout" class="btn btn-outline-primary" role="button">Log out</a>
+                            <a href="/admin/advertisement" class="btn btn-outline-primary" role="button">Advertisement</a>
+                            <a href="/admin/category" class="btn btn-outline-primary" role="button">Category</a>
+                            <a href="/admin/subcategory" class="btn btn-outline-primary" role="button">Subcategory</a>
                            
                         </div>
                     </div>
+
+
+                </br>
+                <div class="container text-center">
+                    <div class="btn-group" role="group" aria-label="Basic outlined example">
+   
+                        <a href="{{ url_for('user', username=current_user.username) }}" class="btn btn-outline-primary" role="button">Dasboard</a>
+                    </div>
+                </div>
+
+
 
                     </p>
                 </div>
@@ -28,3 +47,4 @@
         </div>
     </div>
 {% endblock %}
+
