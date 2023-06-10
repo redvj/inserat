@@ -11,8 +11,8 @@ from werkzeug.exceptions import HTTPException
 
 from app import db, app, login
 from app.models.login import User
-from app.models.advertisement import Category, Subcategory, Advertisement
-
+from app.models.advertisement import Category, Subcategory, Advertisement, City
+from app.models.message import Message
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_admin import helpers as admin_helpers
@@ -52,7 +52,13 @@ class SubcategoryModelView(ModelView):
 
 class AdvertisementModelView(ModelView):
     column_display_pk = True
-    form_columns = ('title', 'description', 'category', 'subcategory', 'user', 'timestamp')
+    form_columns = ('title', 'description', 'category', 'subcategory', 'city', 'price', 'user', 'zip_code', 'timestamp')
+
+
+class CityModelView(ModelView):
+    column_display_pk = True
+    form_columns = ('name', )
+
 
 
 admin = Admin(app, name='Admin Panel', template_mode='bootstrap4') 
@@ -63,6 +69,7 @@ admin.add_view(UserView(User, db.session))
 admin.add_view(CategoryModelView(Category, db.session))
 admin.add_view(SubcategoryModelView(Subcategory, db.session))
 admin.add_view(AdvertisementModelView(Advertisement, db.session))
+admin.add_view(CityModelView(City, db.session))
 
 @app.context_processor
 def security_context_processor():

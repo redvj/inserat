@@ -4,79 +4,76 @@
 
 {% block head %}
   {{ super() }}
+  {{ moment.include_moment() }}
+  
   <style>
     .custom-container {
       margin-top: 50px; /* Adjust the value as needed */
+      
+    }
+    .card {
+    margin-bottom: 20px; /* Adjust the value as per your preference */
+    }
+
+    .card-body {
+    padding: 20px; /* Adjust the value as per your preference */
     }
 
   </style>
 {% endblock %}
 
+
 {% block content %}
 
-<!-- Error Messages -->
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-6 ">
-      <form>
-      {% if form.errors %}
-      <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        {% for field, errors in form.errors.items() %}
-          {% for error in errors %}
-            <p>{{ form[field].label }} - {{ error }}</p>
-          {% endfor %}
-        {% endfor %}
-      </div>
-      {% endif %}
-      </form>
-    </div>
-  </div>
-</div>
-
 <div class="container custom-container">
-  <div class="row justify-content-center">
-    <div class="col-md-6 border rounded shadow-lg">
-      </br>
-      <h1 class="text-center">Place an ad+</h1>
-
-      <!-- advertisement_form.html -->
-      <form method="POST" action="">
-        {{ form.csrf_token }}
-        {{ form.hidden_tag() }}
-        <div class="form-group">
-          {{ form.title.label(class='form-label') }} {{ form.title(class='form-control') }}
+  <div class="card-deck">
+    {% for advertisement in advertisements %}
+      <div class="card rounded shadow-lg">
+        <div class="card-header bg-transparent">
+          <div class="row">
+            <div class="col">
+              <h5 class="card-title">{{ advertisement.title }}</h5>
+            </div>
+            <div class="col">
+              <h5>CHF {{ advertisement.price }}</h5>
+            </div>
+            <div class="col"></div>
+            <div class="col">
+              {{ moment(advertisement.timestamp).calendar() }}
+            </div>
+          </div>
         </div>
-        <div class="form-group">
-          {{ form.description.label(class='form-label') }} {{ form.description(class='form-control') }}
+        <div class="card-body bg-light">
+          <img src="{{ advertisement.image_url }}" class="card-img-top" alt="Advertisement Image">
         </div>
-        <div class="form-group">
-          {{ form.category_id.label(class='form-label') }} {{ form.category_id(class='form-control') }}
+        <div class="card-body bg-light">
+          <p class="card-text">{{ advertisement.description }}</p>
         </div>
-        <div class="form-group">
-          {{ form.subcategory_id.label(class='form-label') }} {{ form.subcategory_id(class='form-control') }}
+        <div class="card-footer bg-transparent text-body-secondary">
+          <div class="row">
+            <div class="col">
+              <ul class="list-group list-group">
+                <li class="list-group-item bg-transparent">Category: {{ advertisement.category.name }}</li>
+                <li class="list-group-item bg-transparent">Subcategory: {{ advertisement.subcategory.name }}</li>
+                <li class="list-group-item bg-transparent">User: {{ advertisement.user.username }}</li>
+              </ul>
+            </div>
+            <div class="col">
+              <ul class="list-group list-group">
+                <li class="list-group-item bg-transparent">City: {{ advertisement.city.name }}</li>
+                <li class="list-group-item bg-transparent">Zip Code: {{ advertisement.zip_code }}</li>
+              </ul>
+            </div>
+            <div class="col">
+              <a href="/contact/{{ advertisement.user.id }}" class="btn btn-primary">Contact</a>
+            </div>
+          </div>
         </div>
-
-        <div class="form-group">
-          {{ form.user_id.label(class='form-label') }} {{ form.user_id(class='form-control') }}
-        </div>
-        </br>
-        <div class="form-group">
-          <button type="submit" class="btn btn-outline-primary">Create Advertisement</button>
-        </div>
-      </form>
-      </br>
-    </div>
+      </div>
+    {% endfor %}
   </div>
-
-  
-
 </div>
-
-
-
 
 
 
 {% endblock %}
-                                                                                                                      

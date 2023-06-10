@@ -22,15 +22,17 @@
         </li>
 
         {% else %}
+   
         <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('advertisements') }}">Advertisements</a>
+          <a class="nav-link" href="{{ url_for('start') }}">Place an ad+</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('home') }}">Place an ad+</a>
+
+         <li class="nav-item">
+          <a class="nav-link" href="/message_board/{{ current_user.id }}">Message Board</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('user', username=current_user.username) }}">Profile</a>
+          <a class="nav-link" href="{{ url_for('user', username=current_user.username) }}">Dashboard</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
@@ -41,8 +43,6 @@
       
         {% endif %}
       </ul>
-      
-      
 
     </div>
   </div>

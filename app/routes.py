@@ -21,6 +21,8 @@ from app.forms.login import LoginForm
 from app.forms.registration import RegistrationForm
 from app.forms.profileedit import ProfileEditForm
 from app.forms.advertisement import AdvertisementForm
+from app.forms.contact import ContactForm
+from app.forms.message import MessageForm
 
 from app.forms.resetpasswordfrom import ResetPasswordForm, ResetPasswordRequestForm
 
@@ -29,6 +31,8 @@ from app.forms.resetpasswordfrom import ResetPasswordForm, ResetPasswordRequestF
 from app.models.login import User
 from app.models.advertisement import Advertisement
 from app.models.advertisement import Category
+from app.models.contact import Contact
+from app.models.message import Message
 
 from app.email import send_password_reset_email
 
@@ -38,41 +42,46 @@ from app.email import send_password_reset_email
 #------------- Startpage ---------------------------------------------------------
 #---------------------------------------------------------------------------------
 
-
-
-#---------------------------------------------------------------------------------
-
-#---------------------------------------------------------------------------------
-#------------- Advertisement - Create -------------------------------------------
-#---------------------------------------------------------------------------------
-
 @app.route('/', methods=['GET', 'POST'] )
 @app.route('/home', methods=['GET', 'POST'])
 @login_required
 def home():
+    all_advertisements = Advertisement.query.all()
+    form = AdvertisementForm()
+    return render_template('home.html',  advertisements=all_advertisements, form=form)
+
+
+#---------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------
+#------------- Place an ad+ -------------------------------------------
+#---------------------------------------------------------------------------------
+
+@app.route('/start', methods=['GET', 'POST'])
+@login_required
+def start():
     form = AdvertisementForm()
     if form.validate_on_submit():
         advertisement = Advertisement(
             title=form.title.data,
             description=form.description.data,
+            price=form.price.data,
+            contact_info=form.contact_info.data,
+            city_id=form.city_id.data,
+            zip_code=form.zip_code.data,
             category_id=form.category_id.data,
             subcategory_id=form.subcategory_id.data,
             user_id=form.user_id.data
         )
         db.session.add(advertisement)
         db.session.commit()
-        flash( 'Your ad is now live!')
-        return redirect(url_for('home'))
-    return render_template('home.html', titel='Home Page', form=form)
+        flash('Your ad is now live!')
+        return redirect(url_for('start'))
+    return render_template('place_an_ad.html', title='Place an ad', form=form)
 
 #---------------------------------------------------------------------------------
 
-@app.route('/advertisements', methods=['GET'])
-@login_required
-def advertisements():
-    all_advertisements = Advertisement.query.all()
-    form = AdvertisementForm()
-    return render_template('advertisements.html', title='Advertisements', advertisements=all_advertisements, form=form)
+
 
 #---------------------------------------------------------------------------------
 #------------- Create Custem Error pages -----------------------------------------
@@ -149,7 +158,7 @@ def user(username):
 
    
   
-    return render_template('user.html', user=user, posts=posts)
+    return render_template('user.html', title='Dashboard', user=user, posts=posts)
 
 
 #---------------------------------------------------------------------------------
@@ -320,4 +329,34 @@ def reset_password(token):
     return render_template('reset_password.html', form=form)
 
 #---------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------
+#------------- Password-recovery/reset -------------------------------------------
+#---------------------------------------------------------------------------------
+
+@app.route('/contact/<int:user_id>', methods=['GET', 'POST'])
+def contact_user(user_id):
+    advertisements = Advertisement.query.all()  # Retrieve the advertisements from the database
+    form = MessageForm(advertisements=advertisements)
+    user = User.query.get(user_id)
+    if not user:
+        return 'User not found'
+
+    form = MessageForm()
+    if form.validate_on_submit():
+        content = form.content.data
+        message = Message(content=content, sender_id=current_user.id, recipient_id=user_id)
+        db.session.add(message)
+        db.session.commit()
+        return redirect(url_for('contact_user', user_id=user_id))
+
+    return render_template('contact.html', user=user, form=form)
+
+#---------------------------------------------------------------------------------
+
+
+@app.route('/message_board/<int:user_id>')
+def message_board(user_id):
+    user = User.query.get(user_id)
+    return render_template('message_board.html', title='Message Board', user=user)
 

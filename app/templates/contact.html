@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  {{ super() }}
+  {{ moment.include_moment() }}
+  <style>
+    .custom-container {
+      margin-top: 50px; /* Adjust the value as needed */
+      
+    }
+
+    
+
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="container custom-container">
+  <div class="container">
+<form method="POST">
+  {{ form.hidden_tag() }}
+  
+  <div class="form-group">
+    <label for="content">Content:</label>
+    {{ form.content(class="form-control") }}
+    {% if form.content.errors %}
+      <span class="text-danger">{{ form.content.errors[0] }}</span>
+    {% endif %}
+  </div>
+
+  <div class="form-group">
+    <label for="advertisement_id">Advertisement ID:</label>
+    <select class="form-control" id="advertisement_id" name="advertisement_id">
+      {% for advertisement in user.advertisements %}
+        <option value="{{ advertisement.id }}">{{ advertisement.id }}</option>
+      {% endfor %}
+    </select>
+    {% if form.advertisement_id.errors %}
+      <span class="text-danger">{{ form.advertisement_id.errors[0] }}</span>
+    {% endif %}
+  </div>
+
+  <button type="submit" class="btn btn-primary">Send Message</button>
+</form>
+</div>
+</div>
+{% endblock %}
