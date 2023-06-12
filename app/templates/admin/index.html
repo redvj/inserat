@@ -9,17 +9,13 @@
             <div class="col">
                 <div class="jumbotron rounded shadow-lg">
                     <h1 class="display-4 text-center">Welcome to the Admin Panel</h1>
-                    
                     <p class="lead text-center">{{ current_user.first_name }} {{ current_user.last_name }} 
-                        <div class="text-center">
-                            <img src="{{ current_user.avatar(128) }}" alt="User Avatar" class="img-fluid rounded-circle">
-                        </div>
                     <br></br>
                     <br></br>
                     <div class="container text-center">
                         <div class="btn-group" role="group" aria-label="Basic outlined example">
-                            <a href="/" class="btn btn-outline-primary" role="button">Back </a>
-                            <a href="{{ url_for('user', username=current_user.username) }}" class="btn btn-outline-warning" role="button">Dashboard</a>
+                            <a href="/" class="btn btn-outline-primary" role="button">Home </a>
+                            <a href="/admin" class="btn btn-outline-primary" role="button">Admin Panel </a>
                             <a href="/logout" class="btn btn-outline-dark" role="button">Log out</a>
                         </div>
                     </div>
@@ -39,15 +35,9 @@
                         </div>
                     </div>
                 </br>
-            <div class="container text-center">
-                <div class="btn-group" role="group" aria-label="Basic outlined example">
-                    <a href="/admin/message" class="btn btn-outline-primary" role="button">Message-Board</a>
-                </div>
-            </div> 
-        </br>              
                 <div class="container text-center">
                     <div class="btn-group" role="group" aria-label="Basic outlined example">
-                        
+                        <a href="{{ url_for('user', username=current_user.username) }}" class="btn btn-outline-warning" role="button">Dasboard</a>
                     </div>
                 </div>
                     </p>

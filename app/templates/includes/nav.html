@@ -22,11 +22,13 @@
         </li>
 
         {% else %}
-        <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('home') }}">Advertisements</a>
-        </li>
+   
         <li class="nav-item">
           <a class="nav-link" href="{{ url_for('start') }}">Place an ad+</a>
+        </li>
+
+         <li class="nav-item">
+          <a class="nav-link" href="/message_board/{{ current_user.id }}">Message Board</a>
         </li>
 
         <li class="nav-item">
@@ -41,8 +43,6 @@
       
         {% endif %}
       </ul>
-      
-      
 
     </div>
   </div>
