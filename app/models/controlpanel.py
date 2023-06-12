@@ -4,6 +4,8 @@
 
 
 from flask import Flask
+from sqlalchemy import func
+
 from flask import redirect, url_for, request
 
 from flask_login import current_user
@@ -11,7 +13,7 @@ from werkzeug.exceptions import HTTPException
 
 from app import db, app, login
 from app.models.login import User
-from app.models.advertisement import Category, Subcategory, Advertisement
+from app.models.advertisement import Category, Subcategory, Advertisement, City, Message
 
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
@@ -41,7 +43,7 @@ class UserView(ModelView):
     
 
 
-# Create Advertisement - ModelView
+# Category and Sub* db - ModelView
 class CategoryModelView(ModelView):
     column_display_pk = True  # Display the primary key in the list view
     form_columns = ('name', 'subcategories')  # Specify the columns to include in the form
@@ -50,9 +52,27 @@ class SubcategoryModelView(ModelView):
     column_display_pk = True
     form_columns = ('name', 'category')
 
+# Advertisement* db - ModelView
 class AdvertisementModelView(ModelView):
     column_display_pk = True
-    form_columns = ('title', 'description', 'category', 'subcategory', 'user', 'timestamp')
+    form_columns = ('title', 'description', 'category', 'subcategory', 'city', 'price', 'user', 'zip_code', 'timestamp', 'images')
+
+
+class CityModelView(ModelView):
+    column_display_pk = True
+    form_columns = ('name', )
+
+
+# Send and Receiving* db - ModelView
+class ReceivedMessageModelView(ModelView):
+    column_display_pk = True
+    form_columns = ('content','sender','recipient_id' )
+    column_list = ['id', 'sender', 'content', 'timestamp']
+
+
+
+
+
 
 
 admin = Admin(app, name='Admin Panel', template_mode='bootstrap4') 
@@ -63,6 +83,9 @@ admin.add_view(UserView(User, db.session))
 admin.add_view(CategoryModelView(Category, db.session))
 admin.add_view(SubcategoryModelView(Subcategory, db.session))
 admin.add_view(AdvertisementModelView(Advertisement, db.session))
+admin.add_view(CityModelView(City, db.session))
+
+admin.add_view(ReceivedMessageModelView(Message, db.session))
 
 @app.context_processor
 def security_context_processor():
