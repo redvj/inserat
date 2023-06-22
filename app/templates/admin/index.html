@@ -1,6 +1,5 @@
 {% extends 'admin/master.html' %}
 
-
 {% block body %}
     {{ super() }}
 
@@ -9,42 +8,44 @@
             <div class="col">
                 <div class="jumbotron rounded shadow-lg">
                     <h1 class="display-4 text-center">Welcome to the Admin Panel</h1>
-                    <p class="lead text-center">{{ current_user.first_name }} {{ current_user.last_name }} 
-                    <br></br>
-                    <br></br>
+                    
+                    <p class="lead text-center">
+                        {{ current_user.first_name }} {{ current_user.last_name }}
+                        <div class="text-center">
+                            <img src="{{ current_user.avatar(128) }}" alt="User Avatar" class="img-fluid rounded-circle">
+                        </div>
+                    </p>
+                    
                     <div class="container text-center">
                         <div class="btn-group" role="group" aria-label="Basic outlined example">
-                            <a href="/" class="btn btn-outline-primary" role="button">Home </a>
-                            <a href="/admin" class="btn btn-outline-primary" role="button">Admin Panel </a>
+                            <a href="/" class="btn btn-outline-primary" role="button">Back</a>
+                            <a href="{{ url_for('user', username=current_user.username) }}" class="btn btn-outline-warning" role="button">Dashboard</a>
                             <a href="/logout" class="btn btn-outline-dark" role="button">Log out</a>
                         </div>
                     </div>
-                </br>
+                    
                     <div class="container text-center">
                         <div class="btn-group" role="group" aria-label="Basic outlined example">
                             <a href="/admin/user" class="btn btn-outline-primary" role="button">User</a>
                             <a href="/admin/advertisement" class="btn btn-outline-primary" role="button">Advertisement</a>
-                            <a href="/admin/category" class="btn btn-outline-primary" role="button">Category</a>
-                            <a href="/admin/subcategory" class="btn btn-outline-primary" role="button">Subcategory</a>
-                           
                         </div>
                     </div>
-
-
-                </br>
-                <div class="container text-center">
-                    <div class="btn-group" role="group" aria-label="Basic outlined example">
-   
-                        <a href="{{ url_for('user', username=current_user.username) }}" class="btn btn-outline-primary" role="button">Dasboard</a>
+                    
+                    <div class="container text-center">
+                        <div class="btn-group" role="group" aria-label="Basic outlined example">
+                            <a href="/admin/city" class="btn btn-outline-secondary" role="button">City</a>
+                            <a href="/admin/category" class="btn btn-outline-secondary" role="button">Category</a>
+                            <a href="/admin/subcategory" class="btn btn-outline-secondary" role="button">Subcategory</a>          
+                        </div>
                     </div>
-                </div>
-
-
-
-                    </p>
+                    
+                    <div class="container text-center">
+                        <div class="btn-group" role="group" aria-label="Basic outlined example">
+                            <a href="/admin/message" class="btn btn-outline-primary" role="button">Message-Board</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 {% endblock %}
-

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  {{ super() }}
+
+
+ 
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <h1>Send Message</h1>
+    <hr>
+
+    <div class="card shadow-lg">
+      <div class="card-body">
+        <h5 class="card-title">{{ advertisement.title }}</h5>
+        <p class="card-text">{{ advertisement.user.username }}</p>
+      </div>
+      <div class="card-footer bg-transparent">
+        <form method="POST">
+          <div class="form-group">
+            <label for="message_content">Message:</label>
+            <textarea class="form-control" id="message_content" name="message_content" rows="5" required></textarea>
+          </div>
+        </br>
+          <button type="submit" class="btn btn-primary">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

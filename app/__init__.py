@@ -5,29 +5,36 @@ from flask_migrate import Migrate
 from flask_admin import Admin
 from flask_login import LoginManager
 from flask_moment import Moment
-
-# For Admin Panel
-from flask_admin.contrib.sqla import ModelView
-
-# For Mail Recovery
+from flask_uploads import UploadSet, configure_uploads, IMAGES
 from flask_mail import Mail
 
 
+# Create the Flask application instance
 app = Flask(__name__)
 
-# Load the config.py file
+# Load the configuration from the Config class in config.py
 app.config.from_object(Config)
+
+# Initialize the SQLAlchemy database object
 db = SQLAlchemy(app)
-Migrate = Migrate(app, db)
+
+# Initialize the Flask-Migrate extension for database migrations
+Migrate(app, db)
+
+# Initialize the Flask-Login extension for user authentication
 login = LoginManager(app)
 login.login_view = 'login'
+
+# Initialize the Flask-Mail extension for sending emails
 mail = Mail(app)
+
+# Initialize the Flask-Moment extension for date and time formatting
 moment = Moment(app)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# Configure the Flask-Uploads extension for file uploads
+photos = UploadSet('images', IMAGES)
+configure_uploads(app, photos)
 
-
+# Import the application routes and models
 from app import routes
-from app.models import login, controlpanel, advertisement
-from app.models.advertisement import Advertisement
+from app.models import controlpanel, advertisement
