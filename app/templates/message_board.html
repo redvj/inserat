@@ -1,0 +1,46 @@
+
+{% extends "base.html" %}
+
+{% block head %}
+  {{ super() }}
+  <style>
+    .custom-container {
+      margin-top: 50px; /* Adjust the value as needed */
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+
+
+<div class="container custom-container">
+  <h1>Message Board</h1>
+
+  <!-- Display messages sent by the user -->
+  <h2>Messages Sent</h2>
+  {% for message in user.messages_sent %}
+    <div class="card mb-3">
+      <div class="card-body">
+        <p>{{ message.advertisement.title }}</p>
+        <p class="card-text">{{ message.content }}</p>
+        <p class="card-text">Sent to: {{ message.recipient.username }}</p>
+        <p class="card-text">Sent on: {{ message.timestamp }}</p>
+      </div>
+    </div>
+  {% endfor %}
+
+  <!-- Display messages received by the user -->
+  <h2>Messages Received</h2>
+  {% for message in user.messages_received %}
+    <div class="card mb-3">
+      <div class="card-body">
+        <p>{{ message.advertisement.title }}</p>
+        <p class="card-text">{{ message.content }}</p>
+        <p class="card-text">Received from: {{ message.sender.username }}</p>
+        <p class="card-text">Received on: {{ message.timestamp }}</p>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+{% endblock %}
