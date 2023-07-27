@@ -28,31 +28,39 @@ from app.models.advertisement import Advertisement, Message, Category, City, Sub
 
 
 #---------------------------------------------------------------------------------
-#------------- *Home - Advertisements --------------------------------------------
+#------------- Home - Advertisements --------------------------------------------
 #---------------------------------------------------------------------------------
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/home', methods=['GET', 'POST'])
 @login_required
 def home():
+     # Get all advertisements from the database
     all_advertisements = Advertisement.query.all()
+    # Get all categories from the database
     categories = Category.query.all()
      # Add this line to get all subcategories
     subcategories = Subcategory.query.all() 
+    # Get all cities from the database
     cities = City.query.all()
+
+    # Create an instance of AdvertisementForm to handle form data
     form = AdvertisementForm()
 
     if request.method == 'POST':
+        # Get the selected category ID from the submitted form
         category_id = request.form.get('category')
         # Add this line to get the selected subcategory
         subcategory_id = request.form.get('subcategory')  
         city_id = request.form.get('city')
         # Add this line to get the minimum price
         price_min = request.form.get('price_min')
-         # Add this line to get the maximum price  
+        # Add this line to get the maximum price  
         price_max = request.form.get('price_max') 
 
+        # Initialize a list to store the filters for the advertisements
         filters = []
         if category_id:
+            # Add category filter to the filters list
             filters.append(Advertisement.category_id == category_id)
         if subcategory_id:
             # Add this line to filter by subcategory
@@ -66,10 +74,12 @@ def home():
             # Add this line to filter by maximum price
             filters.append(Advertisement.price <= price_max)  
 
+        # Retrieve advertisements matching the filters from the database
         filtered_advertisements = Advertisement.query.filter(*filters).all()
     else:
+        # If the request method is GET, display all advertisements without filters
         filtered_advertisements = all_advertisements
-
+    # Render the 'home.html' template with the required data
     return render_template('home.html', title='Home Page',
                            advertisements=filtered_advertisements, form=form,
                            categories=categories, subcategories=subcategories, cities=cities, all_advertisements=all_advertisements)
@@ -133,7 +143,9 @@ def start():
 
 #---------------------------------------------------------------------------------
 
-
+#---------------------------------------------------------------------------------
+#------------- advertisements ----------------------------------------------------
+#---------------------------------------------------------------------------------
 
 @app.route('/advertisements', methods=['GET', 'POST'])
 @login_required
@@ -270,8 +282,9 @@ def register():
     # This route handles the registration functionality
 
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
         # If the user is already authenticated, redirect them to the home page
+        return redirect(url_for('home'))
+        
 
     form = RegistrationForm()
     # Create an instance of the RegistrationForm
@@ -313,22 +326,40 @@ def register():
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
+
+# This route handles the editing of the user's profile
 def edit_profile():
+    # Create an instance of ProfileEditForm and pass the current username to the form
     form = ProfileEditForm(current_user.username)
+    
+     # If the form is submitted and passes validation
     if form.validate_on_submit():
+        # Update the user's profile information with the form data
         current_user.first_name = form.first_name.data
         current_user.last_name = form.last_name.data
         current_user.username = form.username.data
         current_user.email = form.email.data
+
+        # Set the password for the user using the set_password() method
         current_user.set_password(form.password.data)
+        
+        # Commit the changes to the database
         db.session.commit()
+
+        # Display a flash message to inform the user about successful profile update
         flash('Your profile has been updated!', 'success')
+        
+        # Redirect the user to their user profile page after profile update
         return redirect(url_for('user', username=current_user.username))
+    
     elif request.method == 'GET':
+        # If the route is accessed via GET, pre-populate the form with the user's current profile information
         form.first_name.data = current_user.first_name
         form.last_name.data = current_user.last_name
         form.username.data = current_user.username
         form.email.data = current_user.email
+
+    # Render the edit_profile.html template and pass the form to the template for display
     return render_template('edit_profile.html', title='Edit Profile', form=form)
 
 
@@ -338,21 +369,31 @@ def edit_profile():
 #------------- Delete_profile ----------------------------------------------------
 #---------------------------------------------------------------------------------
 
+# This route handles the deletion of the user's profile
 @app.route('/delete_profile', methods=['POST'])
 def delete_profile():
+
+
     # Get the current user
     user = current_user
 
+    # If the user is an admin, display a flash message and redirect them to their user profile page
     if user.is_admin:
         flash('Admin account can not be be deleted')
         return redirect(url_for('user', username=current_user.username))
+    
+    # If the user is not an admin
     else:
         
-        # Delete the user and commit the changes
+        
+        # Delete the user from the database and commit the changes
         db.session.delete(user)
         db.session.commit()
+
+        # Display a flash message to inform the user about successful account deletion
         flash('Your account has been successfully deleted')
-        
+    
+    # Redirect the user to the home page after account deletion
     return redirect(url_for('home'))
 
 #---------------------------------------------------------------------------------
@@ -379,17 +420,32 @@ def admin_Panel():
 #------------- Password-recovery/reset -------------------------------------------
 #---------------------------------------------------------------------------------
 
+# This route handles the password reset request functionality
 @app.route('/reset_password_request', methods=['GET', 'POST'])
 def reset_password_request():
+
     if current_user.is_authenticated:
+         # If the user is already authenticated, redirect them to the home page
         return redirect(url_for('home'))
+    
+    # Create an instance of ResetPasswordRequestForm to handle form data
     form = ResetPasswordRequestForm()
+    
+    # If the form is submitted and passes validation
     if form.validate_on_submit():
+
+        # Find the user based on the provided email
         user = User.query.filter_by(email=form.email.data).first()
         if user:
+            # If a user with the provided email is found, send a password reset email
             send_password_reset_email(user)
+        # Display a flash message to inform the user about password reset instructions
         flash('Check your email for the instructions to reset your password')
+        
+        # Redirect the user to the login page after sending the password reset email
         return redirect(url_for('login'))
+    
+    # Render the reset_password_request.html template and pass the form to the template for display
     return render_template('reset_password_request.html',
                            title='Reset Password', form=form)
 
@@ -414,7 +470,7 @@ def reset_password(token):
 #---------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------
-#------------- Send-Message in advertisement  (Receiving is with Dashbaord) ------------------------
+#------------- Send-Message in advertisement  (Receiving is with Dashbaord) ------
 #---------------------------------------------------------------------------------
 
 @app.route('/send_message/<int:advertisement_id>', methods=['GET', 'POST'])
