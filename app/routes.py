@@ -425,7 +425,7 @@ def admin_Panel():
 def reset_password_request():
 
     if current_user.is_authenticated:
-         # If the user is already authenticated, redirect them to the home page
+        # If the user is already authenticated, redirect them to the home page
         return redirect(url_for('home'))
     
     # Create an instance of ResetPasswordRequestForm to handle form data
@@ -518,26 +518,40 @@ def delete_message(message_id):
 #------------- Sending a reply to a message ( in Dashbaord) ----------------------
 #---------------------------------------------------------------------------------
 
+# This route handles sending a reply to a specific message
 @app.route('/send_reply/<int:message_id>', methods=['POST'])
 @login_required
 def send_reply(message_id):
+
+    # Get the message with the given message_id, or return a 404 error if not found
     message = Message.query.get_or_404(message_id)
     
     if message.recipient_id != current_user.id:
+        # If the recipient of the message is not the current user, they are not authorized to reply
         flash('You are not authorized to reply to this message.', 'danger')
         return redirect(url_for('messages'))
     
+    # If the request method is POST (i.e., the reply form is submitted)
     if request.method == 'POST':
+
+        # Get the content of the reply from the form data
         reply_content = request.form['reply_content']
+
+        # Get the ID of the original sender of the message to send the reply to
         recipient_id = message.sender_id
         
+        # Create a new message as the reply and add it to the database
         reply_message = Message(sender_id=current_user.id, recipient_id=recipient_id, content=reply_content)
         db.session.add(reply_message)
         db.session.commit()
         
+        # Display a flash message to inform the user about successful reply sending
         flash('Reply sent successfully.', 'success')
+
+        # Redirect the user to their user profile page
         return redirect(url_for('user', username=current_user.username))
     
+    # Redirect the user to their user profile page
     return redirect(url_for('user', username=current_user.username))
 
 #---------------------------------------------------------------------------------
