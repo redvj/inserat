@@ -16,7 +16,7 @@ class Category(db.Model):
     def __repr__(self):
         return f'<Category {self.name}>'
 
-
+# Model class for the 'subcategories' table
 class Subcategory(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True, nullable=False)
@@ -26,13 +26,15 @@ class Subcategory(db.Model):
     def __repr__(self):
         return f'<Subcategory {self.name}>'
 
-class City(db.Model):
+# Model class for the 'cities' table
+class City(db.Model): 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True, nullable=False)
 
     def __repr__(self):
         return f'<City {self.name}>'
 
+# Model class for the 'advertisements' table
 class Advertisement(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
@@ -59,7 +61,8 @@ class Advertisement(db.Model):
 
     def __repr__(self):
         return f'<Advertisement {self.title}>'
-    
+
+# Model class for the 'messages' table
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -68,7 +71,7 @@ class Message(db.Model):
     content = db.Column(db.Text, nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     
-
+# Model class for the 'advertisement_images' table
 class AdvertisementImage(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String(100), nullable=False)

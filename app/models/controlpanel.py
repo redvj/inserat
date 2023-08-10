@@ -2,7 +2,7 @@
 # -- Flask-Admin ---------------------------------------------------------------------
 # https://flask-admin.readthedocs.io/en/latest/introduction/#authorization-permissions
 
-
+# Import necessary modules and objects
 from flask import Flask
 from sqlalchemy import func
 
