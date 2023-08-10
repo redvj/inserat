@@ -4,12 +4,15 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
 
-
+# Model class for the 'categories' table
 class Category(db.Model):
+    # Primary key column for the category
     id = db.Column(db.Integer, primary_key=True)
+    # Column for the category name, unique and not nullable
     name = db.Column(db.String(50), unique=True, nullable=False)
+    # Relationship definition to associate Category with Subcategory through the 'subcategories' attribute
     subcategories = db.relationship('Subcategory', back_populates='category', lazy=True)
-
+    # Representation method to show the category name when printing an instance of Category
     def __repr__(self):
         return f'<Category {self.name}>'
 

@@ -84,8 +84,6 @@ def home():
                            advertisements=filtered_advertisements, form=form,
                            categories=categories, subcategories=subcategories, cities=cities, all_advertisements=all_advertisements)
 
-
-
 #---------------------------------------------------------------------------------
 
 
@@ -473,21 +471,35 @@ def reset_password(token):
 #------------- Send-Message in advertisement  (Receiving is with Dashbaord) ------
 #---------------------------------------------------------------------------------
 
+# This route handles sending a message to the user who posted the specified advertisement
 @app.route('/send_message/<int:advertisement_id>', methods=['GET', 'POST'])
 @login_required
 def send_message(advertisement_id):
+
+    # Get the advertisement with the given advertisement_id, or return a 404 error if not found
     advertisement = Advertisement.query.get_or_404(advertisement_id)
     
+    # If the request method is POST (i.e., the message form is submitted)
     if request.method == 'POST':
+
+        # Get the content of the message from the form data
         content = request.form['message_content']
+        # Get the ID of the user who posted the advertisement to send the message to
         recipient_id = advertisement.user.id
         
+        # Create a new message and add it to the database
         message = Message(sender=current_user, recipient_id=recipient_id, content=content)
         db.session.add(message)
         db.session.commit()
+
+        # Display a flash message to inform the user about successful message sending
         flash('Message deleted successfully.', 'success')
+
+        # Redirect the user to the home page
         return redirect(url_for('home'))
     
+    # If the request method is not POST (i.e., accessing the route via GET)
+    # Render the send_message.html template and pass the advertisement to the template for display
     return render_template('send_message.html', advertisement=advertisement)
 
 
@@ -497,18 +509,28 @@ def send_message(advertisement_id):
 #------------- Deleting a message ( in Dashbaord) --------------------------------
 #---------------------------------------------------------------------------------
 
+# This route handles deleting a specific message
 @app.route('/delete_message/<message_id>', methods=['POST'])
 @login_required
 def delete_message(message_id):
+    
+    # Get the message with the given message_id, or return a 404 error if not found
     message = Message.query.get_or_404(message_id)
     
     if message.recipient_id != current_user.id:
+        # If the recipient of the message is not the current user, they are not authorized to delete it
         flash('You are not authorized to delete this message.', 'danger')
+        # Redirect the user to their user profile page
         return redirect(url_for('user'))
-    
+        
+    # Delete the message from the database
     db.session.delete(message)
     db.session.commit()
+
+    # Display a flash message to inform the user about successful message deletion
     flash('Message was sent.', 'success')
+
+    # Redirect the user to their user profile page
     return redirect(url_for('user', username=current_user.username))
 
 #---------------------------------------------------------------------------------
