@@ -53,17 +53,18 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-4 mb-3">
-        <label for="price_min">Minimum Price:</label>
-        <input type="number" class="form-control" id="price_min" name="price_min" placeholder="Minimum Price">
-      </div>
-      <div class="col-md-4 mb-3">
-        <label for="price_max">Maximum Price:</label>
-        <input type="number" class="form-control" id="price_max" name="price_max" placeholder="Maximum Price">
-      </div>
-      <div class="col-md-4 mb-3">
-        <button class="btn btn-primary" type="submit">Apply Filters</button>
-      </div>
+      <div class="row">
+        <div class="col-md-4 mb-3">
+            <label for="price_min">Minimum Price:</label>
+            <input type="number" class="form-control" id="price_min" name="price_min" placeholder="Minimum Price" step="0.05" pattern="\d+(\.\d{1,2})?" min="0">
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="price_max">Maximum Price:</label>
+            <input type="number" class="form-control" id="price_max" name="price_max" placeholder="Maximum Price" step="0.05" pattern="\d+(\.\d{1,2})?" min="0">
+        </div>
+        <div class="col-md-4 mb-3">
+            <button class="btn btn-primary" type="submit">Apply Filters</button>
+        </div>
     </div>
   </form>
 </br>
