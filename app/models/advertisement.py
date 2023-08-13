@@ -2,6 +2,12 @@ from app import db, app, login
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from sqlalchemy import DECIMAL
+
+
+
+
+
 
 
 # Model class for the 'categories' table
@@ -40,7 +46,7 @@ class Advertisement(db.Model):
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
-    price = db.Column(db.Float)
+    price = db.Column(db.Numeric(precision=10, scale=2))
     contact_info = db.Column(db.String(255))
 
     city_id = db.Column(db.Integer, db.ForeignKey('city.id'), nullable=False)

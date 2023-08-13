@@ -1,7 +1,9 @@
 import os
 
 # Get the absolute path of the directory containing the current file
+from dotenv import load_dotenv
 basedir = os.path.abspath(os.path.dirname(__file__))
+load_dotenv(os.path.join(basedir, '.env'))
 
 # This class defines the configuration options for the application
 class Config:
@@ -10,8 +12,11 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'my-secret-key'
     
     # The URI for the database. 
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'app.db')
+    #SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+    #   'sqlite:///' + os.path.join(basedir, 'app.db')
+    
+    # Neu:
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     
     # Disable modification tracking for SQLAlchemy to improve performance
     SQLALCHEMY_TRACK_MODIFICATIONS = False

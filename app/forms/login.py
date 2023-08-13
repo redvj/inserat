@@ -7,7 +7,7 @@ from app.models.login import User
 class LoginForm(FlaskForm):
     # Input field for the username with DataRequired validator to ensure it's not empty
     # and Length validator to specify minimum and maximum lengths
-    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
+    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=255)])
     # Password field for the user's password with DataRequired validator to ensure it's not empty
     password = PasswordField('Password', validators=[DataRequired()])
     # Checkbox field to enable "Remember Me" functionality for the user
