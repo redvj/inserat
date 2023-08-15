@@ -76,23 +76,22 @@
 
         <div class="form-group">
           {{ form.category_id.label(class="form-label") }}
-          {{ form.category_id(class="form-control") }}
+          {{ form.category_id(class="form-control", id="category-select") }}
           {% for error in form.category_id.errors %}
-            <div class="alert alert-danger" role="alert">
-              {{ error }}
-            </div>
+              <div class="alert alert-danger" role="alert">
+                  {{ error }}
+              </div>
           {% endfor %}
-        </div>
-
-        <div class="form-group">
+      </div>
+      
+      <div class="form-group">
           {{ form.subcategory_id.label(class="form-label") }}
-          {{ form.subcategory_id(class="form-control") }}
-          {% for error in form.subcategory_id.errors %}
-            <div class="alert alert-danger" role="alert">
-              {{ error }}
-            </div>
-          {% endfor %}
-        </div>
+          <select class="form-control" id="subcategory-select" name="subcategory_id">
+              {% for subcategory in form.subcategory_id.choices %}
+                  <option value="{{ subcategory[0] }}">{{ subcategory[1] }}</option>
+              {% endfor %}
+          </select>
+      </div>
 
         <div class="form-group">
           {{ form.city_id.label(class="form-label") }}
