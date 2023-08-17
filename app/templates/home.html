@@ -90,12 +90,15 @@
               </div>
             </div>
             <div class="card-body bg-light">
-              {% if advertisement.image_filename %}
-                <img src="{{ url_for('static', filename='images/' + advertisement.image_filename) }}" class="card-img-top" alt="Advertisement Image" style="max-width: 200px; max-height: 200px;">
-              {% else %}
-                <img src="{{ url_for('static', filename='images/default_image.png') }}" class="card-img-top" alt="Default Image" style="max-width: 200px; max-height: 200px;">
-              {% endif %}
+              <a href="{{ url_for('static', filename='images/' + advertisement.image_filename) }}" data-lightbox="advertisement-images">
+                {% if advertisement.image_filename %}
+                  <img src="{{ url_for('static', filename='images/' + advertisement.image_filename) }}" class="card-img-top" alt="Advertisement Image" style="max-width: 200px; max-height: 200px;">
+                {% else %}
+                  <img src="{{ url_for('static', filename='images/default_image.png') }}" class="card-img-top" alt="Default Image" style="max-width: 200px; max-height: 200px;">
+                {% endif %}
+              </a>
             </div>
+            
             <div class="card-body bg-light">
               <p class="card-text">{{ advertisement.description }}</p>
             </div>
