@@ -129,7 +129,7 @@
 <br>
 <br>
 <!-- Published Ads -->
-<div class="container custom-container ">
+<div class="container custom-container">
   <h2>My Advertisements</h2>
   <table class="table">
     <thead>
@@ -138,6 +138,7 @@
         <th>Title</th>
         <th>Price</th>
         <th>Posted</th>
+        <th>Action</th> 
       </tr>
     </thead>
     <tbody>
@@ -150,14 +151,19 @@
             <img src="{{ url_for('static', filename='images/default_image.png') }}" alt="Default Image" class="img-fluid" style="max-width: 100px; max-height: 100px;">
           {% endif %}
         </td>
-
         <td>{{ ad.title }}</td>
-        <td>${{ ad.price }}</td>
+        <td>CHF {{ ad.price }}</td>
         <td>{{ ad.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+        <td>
+          <form action="{{ url_for('delete_ad', ad_id=ad.id) }}" method="post">
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+        </td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
+
 
 {% endblock %}

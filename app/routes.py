@@ -523,7 +523,11 @@ def delete_message(message_id):
         # Redirect the user to their user profile page
         return redirect(url_for('user'))
         
-    # Delete the message from the database
+    # Delete the message from the database#---------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------
+#------------- Deleting a message ( in Dashbaord) --------------------------------
+#---------------------------------------------------------------------------------
     db.session.delete(message)
     db.session.commit()
 
@@ -552,7 +556,15 @@ def send_reply(message_id):
         # If the recipient of the message is not the current user, they are not authorized to reply
         flash('You are not authorized to reply to this message.', 'danger')
         return redirect(url_for('messages'))
-    
+    #---------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------
+#------------- Deleting a message ( in Dashbaord)#---------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------
+#------------- Deleting a message ( in Dashbaord) --------------------------------
+#--------------------------------------------------------------------------------- --------------------------------
+#---------------------------------------------------------------------------------
     # If the request method is POST (i.e., the reply form is submitted)
     if request.method == 'POST':
 
@@ -577,3 +589,26 @@ def send_reply(message_id):
     return redirect(url_for('user', username=current_user.username))
 
 #---------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------
+#------------- Deleting Advertisements  ( in Dashbaord) --------------------------------
+#---------------------------------------------------------------------------------
+
+@app.route('/delete_ad/<int:ad_id>', methods=['POST'])
+def delete_ad(ad_id):
+    # Assuming you have an Advertisement model
+    ad = Advertisement.query.get(ad_id)
+
+    if ad:
+        # Delete the advertisement from the database
+        db.session.delete(ad)
+        db.session.commit()
+        flash('Advertisement deleted successfully.', 'success')
+    else:
+        flash('Advertisement not found.', 'error')
+
+    # Redirect the user to their user profile page
+    return redirect(url_for('user', username=current_user.username))
+
+#---------------------------------------------------------------------------------
+
