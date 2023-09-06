@@ -1,9 +1,10 @@
 # Import necessary modules and objects
-from datetime import datetime
+from datetime import datetime, timedelta
 from app import db, login, app
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-
+import base64
+import os
 import jwt
 from time import time
 
@@ -23,6 +24,7 @@ class User(db.Model, UserMixin):
     is_admin = db.Column(db.Boolean, default=False)
     is_blocked = db.Column(db.Boolean, default=False)  # registered users can be blocked from logging in
     advertisements = db.relationship('Advertisement', backref='user', lazy=True)
+    
     
     # Method to set a user's password (hashing the password)
     def set_password(self, password):

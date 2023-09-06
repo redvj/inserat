@@ -36,5 +36,5 @@ photos = UploadSet('images', IMAGES)
 configure_uploads(app, photos)
 
 # Import the application routes and models
-from app import routes
+from app import routes, api
 from app.models import controlpanel, advertisement
