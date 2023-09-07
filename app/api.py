@@ -3,6 +3,7 @@ from flask import url_for, jsonify, request
 from app import app, db
 from app.errors import bad_request
 from app.models.login import User
+from app.models.advertisement import Advertisement
 from app.errors import error_response
 
 
@@ -44,3 +45,20 @@ def get_user(user_id):
 
 
 
+@app.route('/api/advertisement', methods=['GET'])
+def get_advertisements():
+    advertisements = Advertisement.query.all()
+    advertisement_list = []
+
+    for advertisement in advertisements:
+        advertisement_data = {
+            'title': advertisement.title,
+            'description': advertisement.description,
+            'timestamp': advertisement.timestamp.isoformat(),
+            'price': float(advertisement.price),
+            'contact_info': advertisement.contact_info,
+            'zip_code': advertisement.zip_code,
+        }
+        advertisement_list.append(advertisement_data)
+
+    return jsonify(advertisement_list)
