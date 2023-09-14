@@ -3,6 +3,10 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired, Length, Email, ValidationError, EqualTo
 from app.models.login import User
 
+
+#Übernommen aus den Beispielen Microblog
+
+
 # Form for user login
 class LoginForm(FlaskForm):
     # Input field for the username with DataRequired validator to ensure it's not empty

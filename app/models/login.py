@@ -8,6 +8,8 @@ import os
 import jwt
 from time import time
 
+#Übernommen aus den Beispielen Microblog
+
 # Method for Avatare
 from hashlib import md5
 

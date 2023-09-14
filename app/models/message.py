@@ -4,6 +4,8 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
+#Übernommen aus den Beispielen Microblog
+
 # Model class for the 'messages' table
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)

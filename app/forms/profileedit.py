@@ -3,6 +3,8 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 from app.models.login import User
 
+#Übernommen aus den Beispielen Microblog
+
 # Form for editing user profile information
 class ProfileEditForm(FlaskForm):
 

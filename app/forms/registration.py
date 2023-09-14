@@ -3,6 +3,7 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 from app.models.login import User
 
+#Übernommen aus den Beispielen Microblog
 class RegistrationForm(FlaskForm):
     # Field for users to input their first name
     first_name = StringField('First Name', validators=[DataRequired()])
